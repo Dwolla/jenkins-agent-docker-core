@@ -1,3 +1,4 @@
+FROM dwolla/jenkins-agent-nucleus AS nucleus
 FROM openjdk:8-jdk-alpine
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
@@ -6,7 +7,7 @@ ENV JENKINS_HOME=/home/jenkins \
     JENKINS_AGENT=/usr/share/jenkins \
     AGENT_VERSION=2.62.6
 
-COPY jenkins-agent /usr/local/bin/jenkins-agent
+COPY --from=nucleus / /
 
 RUN apk add --update --no-cache \
         bash \
@@ -18,9 +19,6 @@ RUN apk add --update --no-cache \
         py-pip \
     && \
     pip install awscli && \
-    curl --create-dirs -sSLo ${JENKINS_AGENT}/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${AGENT_VERSION}/remoting-${AGENT_VERSION}.jar && \
-    chmod 755 ${JENKINS_AGENT} && \
-    chmod 644 ${JENKINS_AGENT}/agent.jar && \
     adduser -S -h ${JENKINS_HOME} jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \
     chmod 755 /usr/local/bin/jenkins-agent
