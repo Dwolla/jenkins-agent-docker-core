@@ -1,5 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jre-alpine
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
