@@ -16,9 +16,13 @@ RUN apk add --update --no-cache \
         git \
         jq \
         openssh-client \
-        py-pip \
+        python3 \
     && \
-    pip install awscli && \
+    pip3 install --upgrade pip && \
+    pip3 install --upgrade \
+        awscli \
+        virtualenv \
+        && \
     adduser -S -h ${JENKINS_HOME} jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \
     chmod 755 /usr/local/bin/jenkins-agent
