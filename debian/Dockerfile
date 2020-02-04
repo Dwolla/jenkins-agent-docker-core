@@ -1,5 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM openjdk:8-jre
+FROM openjdk:8-jre-slim-buster
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -34,9 +34,6 @@ RUN set -ex && \
       apt-key adv --no-tty --batch --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
       apt-key adv --no-tty --batch --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
     done && \
-    echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list && \
-    apt-get update && \
-    apt-get install -y docker-engine && \
     pip3 install --upgrade \
         awscli \
         virtualenv \
@@ -44,6 +41,9 @@ RUN set -ex && \
     mkdir -p ${JENKINS_HOME} && \
     useradd --home ${JENKINS_HOME} --system jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    mkdir -p /usr/share/man/man1/ && \
+    touch /usr/share/man/man1/sh.distrib.1.gz && \
     apt-get clean
 
 USER jenkins
