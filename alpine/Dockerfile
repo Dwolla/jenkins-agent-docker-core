@@ -5,11 +5,11 @@ LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-c
 
 ENV JENKINS_HOME=/home/jenkins \
     JENKINS_AGENT=/usr/share/jenkins \
-    AGENT_VERSION=2.62.6
+    AGENT_VERSION=3.10
 
 COPY --from=nucleus / /
 
-RUN apk add --update --no-cache \
+RUN apk add --update-cache --no-cache \
         bash \
         ca-certificates \
         curl \

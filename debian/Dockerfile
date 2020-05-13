@@ -5,7 +5,7 @@ LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-c
 
 ENV JENKINS_HOME=/home/jenkins \
     JENKINS_AGENT=/usr/share/jenkins \
-    AGENT_VERSION=2.62.6
+    AGENT_VERSION=3.10
 
 COPY --from=nucleus / /
 
@@ -43,8 +43,7 @@ RUN set -ex && \
     chown -R jenkins ${JENKINS_HOME} && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     mkdir -p /usr/share/man/man1/ && \
-    touch /usr/share/man/man1/sh.distrib.1.gz && \
-    apt-get clean
+    touch /usr/share/man/man1/sh.distrib.1.gz
 
 USER jenkins
 
