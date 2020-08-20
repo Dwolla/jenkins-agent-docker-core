@@ -15,6 +15,7 @@ RUN apk add --update-cache --no-cache \
         curl \
         git \
         jq \
+        make \
         openssh-client \
         python3 \
     && \
