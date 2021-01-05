@@ -21,6 +21,7 @@ RUN set -ex && \
         ca-certificates \
         curl \
         git \
+        gpg \
         jq \
         make \
         python3 \
