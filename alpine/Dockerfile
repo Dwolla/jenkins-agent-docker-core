@@ -14,6 +14,7 @@ RUN apk add --update-cache --no-cache \
         ca-certificates \
         curl \
         git \
+        gnupg \
         jq \
         make \
         openssh-client \
