@@ -13,6 +13,7 @@ RUN apk add --update-cache --no-cache \
         bash \
         ca-certificates \
         curl \
+        expect \
         git \
         gnupg \
         jq \

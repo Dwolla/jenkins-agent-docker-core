@@ -20,6 +20,7 @@ RUN set -ex && \
         bc \
         ca-certificates \
         curl \
+        expect \
         git \
         gpg \
         jq \
