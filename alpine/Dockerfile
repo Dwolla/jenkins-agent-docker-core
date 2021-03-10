@@ -9,7 +9,9 @@ ENV JENKINS_HOME=/home/jenkins \
 
 COPY --from=nucleus / /
 
-RUN apk add --update-cache --no-cache \
+RUN apk -U upgrade \
+        && \
+    apk add --update-cache --no-cache \
         bash \
         ca-certificates \
         curl \
@@ -21,8 +23,8 @@ RUN apk add --update-cache --no-cache \
         openssh-client \
         python3 \
     && \
-    pip3 install --upgrade pip && \
-    pip3 install --upgrade \
+    pip3 install --upgrade --no-cache-dir pip && \
+    pip3 install --upgrade --no-cache-dir \
         awscli \
         virtualenv \
         && \
