@@ -1,0 +1,26 @@
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: set env
+        run: echo "TAG=v$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
