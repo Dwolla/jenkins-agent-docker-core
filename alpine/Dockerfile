@@ -22,7 +22,7 @@ RUN apk -U upgrade \
         make \
         openssh-client \
         python3 \
-	py3-pip \
+        py3-pip \
         py3-virtualenv \
     && \
     pip3 install --upgrade --no-cache-dir \
