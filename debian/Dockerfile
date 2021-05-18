@@ -9,6 +9,8 @@ ENV JENKINS_HOME=/home/jenkins \
 
 COPY --from=nucleus / /
 
+COPY build/install-esh.sh /tmp/build/install-esh.sh
+
 WORKDIR ${JENKINS_HOME}
 
 # apt-key loop inspired by https://github.com/nodejs/docker-node/issues/340#issuecomment-321669029
@@ -27,6 +29,7 @@ RUN set -ex && \
         make \
         python3 \
         python3-pip \
+        shellcheck \
         zip \
         && \
     for key in \
@@ -40,6 +43,8 @@ RUN set -ex && \
         awscli \
         virtualenv \
         && \
+    /tmp/build/install-esh.sh v0.3.1 && \
+    rm -rf /tmp/build && \
     mkdir -p ${JENKINS_HOME} && \
     useradd --home ${JENKINS_HOME} --system jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \

@@ -1,4 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
+FROM koalaman/shellcheck-alpine:v0.7.2 AS shellcheck
 FROM openjdk:8-jre-alpine
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
@@ -9,12 +10,15 @@ ENV JENKINS_HOME=/home/jenkins \
 
 COPY --from=nucleus / /
 
+COPY --from=shellcheck /bin/shellcheck /bin/
+
 RUN apk -U upgrade \
         && \
     apk add --update-cache --no-cache \
         bash \
         ca-certificates \
         curl \
+        esh \
         expect \
         git \
         gnupg \
