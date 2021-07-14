@@ -33,13 +33,6 @@ RUN set -ex && \
         shellcheck \
         zip \
         && \
-    for key in \
-      58118E89F3A912897C070ADBF76221572C52609D \
-    ; do \
-      apt-key adv --no-tty --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
-      apt-key adv --no-tty --batch --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-      apt-key adv --no-tty --batch --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
-    done && \
     pip3 install --upgrade \
         awscli \
         virtualenv \
