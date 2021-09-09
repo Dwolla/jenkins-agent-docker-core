@@ -1,6 +1,6 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
 FROM koalaman/shellcheck-alpine:v0.7.2 AS shellcheck
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk8:jdk8u302-b08-alpine-slim
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -26,6 +26,7 @@ RUN apk -U upgrade \
         make \
         openssh-client \
         python3 \
+        py3-pip \
     && \
     pip3 install --upgrade --no-cache-dir pip && \
     pip3 install --upgrade --no-cache-dir \
