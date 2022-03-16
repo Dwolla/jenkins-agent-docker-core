@@ -1,5 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM openjdk:8-jre-slim-buster
+FROM openjdk:11-buster
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -15,8 +15,7 @@ WORKDIR ${JENKINS_HOME}
 
 # apt-key loop inspired by https://github.com/nodejs/docker-node/issues/340#issuecomment-321669029
 RUN set -ex && \
-    apt-get update && \
-    apt-get install -y \
+apt-get update && apt-get install -y \
         apt-transport-https \
         bash \
         bc \
@@ -31,9 +30,8 @@ RUN set -ex && \
         python3-pip \
         python3-venv \
         shellcheck \
-        zip \
-        && \
-    pip3 install --upgrade \
+        zip
+RUN pip3 install --upgrade \
         awscli \
         virtualenv \
         && \
@@ -42,7 +40,6 @@ RUN set -ex && \
     mkdir -p ${JENKINS_HOME} && \
     useradd --home ${JENKINS_HOME} --system jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \
-    ln -s /usr/bin/python3 /usr/bin/python && \
     mkdir -p /usr/share/man/man1/ && \
     touch /usr/share/man/man1/sh.distrib.1.gz
 

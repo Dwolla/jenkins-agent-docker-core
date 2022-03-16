@@ -1,5 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM eclipse-temurin:8u302-b08-jdk
+FROM eclipse-temurin:11
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 

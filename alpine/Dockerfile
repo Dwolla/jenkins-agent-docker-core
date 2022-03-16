@@ -1,6 +1,6 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
 FROM koalaman/shellcheck-alpine:v0.7.2 AS shellcheck
-FROM adoptopenjdk/openjdk8:jdk8u302-b08-alpine-slim
+FROM eclipse-temurin:11-alpine
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
