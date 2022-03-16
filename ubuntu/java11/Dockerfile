@@ -1,6 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM koalaman/shellcheck-alpine:v0.7.2 AS shellcheck
-FROM adoptopenjdk/openjdk8:jdk8u302-b08-alpine-slim
+FROM eclipse-temurin:11
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -10,34 +9,31 @@ ENV JENKINS_HOME=/home/jenkins \
 
 COPY --from=nucleus / /
 
-COPY --from=shellcheck /bin/shellcheck /bin/
+WORKDIR ${JENKINS_HOME}
 
-RUN apk -U upgrade \
-        && \
-    apk add --update-cache --no-cache \
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y \
+        apt-transport-https \
         bash \
+        bc \
         ca-certificates \
         curl \
-        esh \
         expect \
         git \
-        gnupg \
+        gpg \
         jq \
         make \
-        openssh-client \
-        python3 \
-        py3-pip \
-    && \
-    pip3 install --upgrade --no-cache-dir pip && \
-    pip3 install --upgrade --no-cache-dir \
-        awscli \
-        virtualenv \
+        shellcheck \
+        zip \
         && \
-    adduser -S -h ${JENKINS_HOME} jenkins && \
+    rm -rf /tmp/build && \
+    mkdir -p ${JENKINS_HOME} && \
+    useradd --home ${JENKINS_HOME} --system jenkins && \
     chown -R jenkins ${JENKINS_HOME} && \
-    chmod 755 /usr/local/bin/jenkins-agent
+    mkdir -p /usr/share/man/man1/ && \
+    touch /usr/share/man/man1/sh.distrib.1.gz
 
-WORKDIR ${JENKINS_HOME}
 USER jenkins
 
 RUN git config --global user.email "dev+jenkins@dwolla.com" && \
