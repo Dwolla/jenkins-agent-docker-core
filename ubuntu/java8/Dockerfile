@@ -1,5 +1,5 @@
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM openjdk:11-buster
+FROM eclipse-temurin:8u302-b08-jdk
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -9,13 +9,11 @@ ENV JENKINS_HOME=/home/jenkins \
 
 COPY --from=nucleus / /
 
-COPY build/install-esh.sh /tmp/build/install-esh.sh
-
 WORKDIR ${JENKINS_HOME}
 
-# apt-key loop inspired by https://github.com/nodejs/docker-node/issues/340#issuecomment-321669029
 RUN set -ex && \
-apt-get update && apt-get install -y \
+    apt-get update && \
+    apt-get install -y \
         apt-transport-https \
         bash \
         bc \
@@ -26,16 +24,9 @@ apt-get update && apt-get install -y \
         gpg \
         jq \
         make \
-        python3 \
-        python3-pip \
-        python3-venv \
         shellcheck \
-        zip
-RUN pip3 install --upgrade \
-        awscli \
-        virtualenv \
+        zip \
         && \
-    /tmp/build/install-esh.sh v0.3.1 && \
     rm -rf /tmp/build && \
     mkdir -p ${JENKINS_HOME} && \
     useradd --home ${JENKINS_HOME} --system jenkins && \
