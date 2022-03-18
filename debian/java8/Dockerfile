@@ -31,8 +31,8 @@ RUN set -ex && \
         python3-pip \
         python3-venv \
         shellcheck \
-        zip
-RUN pip3 install --upgrade \
+        zip \
+    && pip3 install --upgrade \
         awscli \
         virtualenv \
         && \
