@@ -36,7 +36,7 @@ fi
 
 git clone --quiet -b "$esh_tag" --depth 1 https://github.com/jirutka/esh.git "$eshdir"
 
-if git --git-dir="$eshdir/.git" verify-tag "$esh_tag" 2>/dev/null; then
+if ! git --git-dir="$eshdir/.git" verify-tag "$esh_tag"; then
     echo "Tag $esh_tag not signed" >&2
     exit 1
 fi

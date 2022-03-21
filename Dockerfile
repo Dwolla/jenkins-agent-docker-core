@@ -1,5 +1,7 @@
+ARG TEMURIN_TAG
+
 FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM eclipse-temurin:8u302-b08-jdk
+FROM eclipse-temurin:$TEMURIN_TAG
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
@@ -8,6 +10,7 @@ ENV JENKINS_HOME=/home/jenkins \
     AGENT_VERSION=3.10
 
 COPY --from=nucleus / /
+COPY build/install-esh.sh /tmp/build/install-esh.sh
 
 WORKDIR ${JENKINS_HOME}
 
@@ -24,9 +27,18 @@ RUN set -ex && \
         gpg \
         jq \
         make \
+        python3 \
+        python3-pip \
+        python3-venv \
         shellcheck \
         zip \
         && \
+    pip3 install --upgrade \
+        awscli \
+        virtualenv \
+        && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    /tmp/build/install-esh.sh v0.3.1 && \
     rm -rf /tmp/build && \
     mkdir -p ${JENKINS_HOME} && \
     useradd --home ${JENKINS_HOME} --system jenkins && \
