@@ -26,9 +26,7 @@ readonly eshdir="$(mktemp -d esh-repo.XXXXXXXXXX)"
 export GNUPGHOME="$gpg_homedir"
 mkdir -p "$gpg_homedir"
 
-curl -sS https://api.github.com/users/jirutka/gpg_keys |\
-        jq -r '.[] | select(.key_id == "F95BD679104D3115") | .raw_key' |\
-        gpg --quiet --import -
+gpg --quiet --receive-keys F95BD679104D3115
 declare -r gpg_import_result=$?
 
 if [ "$?" != "0" ] && [ "$gpg_import_result" != "2" ]; then
@@ -38,7 +36,7 @@ fi
 
 git clone --quiet -b "$esh_tag" --depth 1 https://github.com/jirutka/esh.git "$eshdir"
 
-if ! git --git-dir="$eshdir/.git" verify-tag "$esh_tag" 2>/dev/null; then 
+if git --git-dir="$eshdir/.git" verify-tag "$esh_tag" 2>/dev/null; then
     echo "Tag $esh_tag not signed" >&2
     exit 1
 fi
