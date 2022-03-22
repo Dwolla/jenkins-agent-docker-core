@@ -1,12 +1,13 @@
 #!/bin/bash
-set -eu
+set -o errexit -o nounset -o pipefail
+IFS=$'\n\t'
 
 umask 077
 
 cleanup () {
-  set +u
-  rm -fr "$gpg_homedir" "$eshdir"
-  set -u
+  set +o nounset
+  rm -fr "$gpg_homedir" "$esh_dir"
+  set -o nounset
 }
 
 trap "cleanup" EXIT HUP INT TERM
@@ -21,24 +22,30 @@ if [[ "$#" -ne 1 ]]; then
 fi
 
 readonly esh_tag="$1"
-readonly gpg_homedir="$(mktemp -d esh-gpghome.XXXXXXXXXX)"
-readonly eshdir="$(mktemp -d esh-repo.XXXXXXXXXX)"
+
+gpg_homedir="$(mktemp -d esh-gpghome.XXXXXXXXXX)"
+esh_dir="$(mktemp -d esh-repo.XXXXXXXXXX)"
+readonly gpg_homedir esh_dir
+
 export GNUPGHOME="$gpg_homedir"
 mkdir -p "$gpg_homedir"
 
-gpg --quiet --receive-keys F95BD679104D3115
-declare -r gpg_import_result=$?
+set -x
 
-if [ "$?" != "0" ] && [ "$gpg_import_result" != "2" ]; then
+if ! gpg --receive-keys F95BD679104D3115; then
     echo "Failed to import GPG key" >&2
     exit 1
 fi
 
-git clone --quiet -b "$esh_tag" --depth 1 https://github.com/jirutka/esh.git "$eshdir"
+git clone \
+  --branch "$esh_tag" \
+  --depth 1 \
+  https://github.com/jirutka/esh.git \
+  "$esh_dir"
 
-if ! git --git-dir="$eshdir/.git" verify-tag "$esh_tag"; then
+if ! git --git-dir="$esh_dir/.git" verify-tag "$esh_tag"; then
     echo "Tag $esh_tag not signed" >&2
     exit 1
 fi
 
-cp "${eshdir}/esh" /bin/esh
+cp "${esh_dir}/esh" /bin/esh
