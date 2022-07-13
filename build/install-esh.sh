@@ -49,3 +49,5 @@ if ! git --git-dir="$esh_dir/.git" verify-tag "$esh_tag"; then
 fi
 
 cp "${esh_dir}/esh" /bin/esh
+
+chmod 0555 /bin/esh
