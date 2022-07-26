@@ -1,18 +1,14 @@
-ARG TEMURIN_TAG
+ARG JENKINS_REMOTING_TAG
 
-FROM dwolla/jenkins-agent-nucleus AS nucleus
-FROM eclipse-temurin:$TEMURIN_TAG
+FROM jenkins/inbound-agent:$JENKINS_REMOTING_TAG
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 
-ENV JENKINS_HOME=/home/jenkins \
-    JENKINS_AGENT=/usr/share/jenkins \
-    AGENT_VERSION=3.10
-
-COPY --from=nucleus / /
 COPY build/install-esh.sh /tmp/build/install-esh.sh
 
 WORKDIR ${JENKINS_HOME}
+
+USER root
 
 RUN set -ex && \
     apt-get update && \
@@ -40,9 +36,6 @@ RUN set -ex && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     /tmp/build/install-esh.sh v0.3.1 && \
     rm -rf /tmp/build && \
-    mkdir -p ${JENKINS_HOME} && \
-    useradd --home ${JENKINS_HOME} --system jenkins && \
-    chown -R jenkins ${JENKINS_HOME} && \
     mkdir -p /usr/share/man/man1/ && \
     touch /usr/share/man/man1/sh.distrib.1.gz
 
