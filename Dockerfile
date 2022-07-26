@@ -3,6 +3,7 @@ ARG JENKINS_REMOTING_TAG
 FROM jenkins/inbound-agent:$JENKINS_REMOTING_TAG
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
+ENV JENKINS_HOME=/home/jenkins
 
 COPY build/install-esh.sh /tmp/build/install-esh.sh
 
