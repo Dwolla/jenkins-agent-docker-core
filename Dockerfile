@@ -40,6 +40,10 @@ RUN set -ex && \
     mkdir -p /usr/share/man/man1/ && \
     touch /usr/share/man/man1/sh.distrib.1.gz
 
+# change /bin/sh to use bash, because lots of our scripts use bash features
+RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+
 USER jenkins
 
 RUN git config --global user.email "dev+jenkins@dwolla.com" && \
