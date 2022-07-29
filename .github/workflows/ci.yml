@@ -16,8 +16,6 @@ jobs:
           - 4.13.2-1-jdk11
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Build and Push Docker Image
         uses: Dwolla/jenkins-agents-workflow/.github/actions/build@main
         with:
