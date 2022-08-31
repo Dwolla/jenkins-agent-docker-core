@@ -2,28 +2,31 @@ name: Build
 
 on:
   pull_request:
-    branches: ['**']
   push:
     branches: ['**']
     tags: [v*]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        remoting_tag:
-          - 4.13.2-1-jdk8
-          - 4.13.2-1-jdk11
     runs-on: ubuntu-latest
     steps:
-      - name: Build and Push Docker Image
+      - name: Build and Push Docker Image JDK11
         uses: Dwolla/jenkins-agents-workflow/.github/actions/build@main
         with:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-          BASE_TAG: ${{ matrix.REMOTING_TAG }}
+          BASE_TAG: 4.13.2-1-jdk11
           TAG_NAME: JENKINS_REMOTING_TAG
           IMAGE_NAME: dwolla/jenkins-agent-core
+      - name: Build and Push Docker Image JDK8
+        uses: Dwolla/jenkins-agents-workflow/.github/actions/build@main
+        with:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          BASE_TAG: 4.13.2-1-jdk8
+          TAG_NAME: JENKINS_REMOTING_TAG
+          IMAGE_NAME: dwolla/jenkins-agent-core
+          PLATFORMS: linux/amd64
   build-complete:
     needs: build
     runs-on: ubuntu-latest
