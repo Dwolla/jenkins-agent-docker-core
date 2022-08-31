@@ -7,3 +7,5 @@ Docker images containing the Jenkins remoting JAR and necessary dependencies.
 GitHub Actions will build the Docker images for multiple supported architectures.
 
 To build locally, run `make all` or `make remoting-${TAG}` for one of the supported tags.
+
+TEST
