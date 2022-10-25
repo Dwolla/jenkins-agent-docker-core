@@ -47,6 +47,7 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
 USER jenkins
 
 RUN git config --global user.email "dev+jenkins@dwolla.com" && \
-    git config --global user.name "Jenkins Build Agent"
+    git config --global user.name "Jenkins Build Agent" && \
+    git config --global init.defaultBranch main
 
 ENTRYPOINT ["jenkins-agent"]
