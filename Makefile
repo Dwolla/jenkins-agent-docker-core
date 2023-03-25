@@ -1,11 +1,15 @@
-JENKINS_REMOTING_TAGS := 4.13.2-1-jdk8 4.13.2-1-jdk11
-JOBS := $(addprefix remoting-,${JENKINS_REMOTING_TAGS})
+JENKINS_REMOTING_TAG := 4.13.2-1-jdk11
+JOB := remoting-${JENKINS_REMOTING_TAG}
+CLEAN_JOB := clean-${CORE_TAG}
 
-all: ${JOBS}
-.PHONY: all ${JOBS}
+clean: ${CLEAN_JOB}
+.PHONY: all clean ${JOB} ${CLEAN_JOB}
 
-${JOBS}: remoting-%: Dockerfile
+${JOB}: remoting-%: Dockerfile
 	docker build \
 	  --build-arg JENKINS_REMOTING_TAG=$* \
 	  --tag dwolla/jenkins-agent-core:$*-SNAPSHOT \
 	  .
+
+${CLEAN_JOB}: clean-%:
+	docker rmi -f dwolla/jenkins-agent-core:$*-SNAPSHOT
