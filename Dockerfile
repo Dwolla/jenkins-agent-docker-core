@@ -36,7 +36,7 @@ RUN set -ex && \
         virtualenv \
         && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    /tmp/build/install-esh.sh v0.3.1 && \
+    /tmp/build/install-esh.sh v0.3.2 && \
     rm -rf /tmp/build && \
     mkdir -p /usr/share/man/man1/ && \
     touch /usr/share/man/man1/sh.distrib.1.gz
