@@ -49,6 +49,8 @@ USER jenkins
 
 RUN git config --global user.email "dev+jenkins@dwolla.com" && \
     git config --global user.name "Jenkins Build Agent" && \
-    git config --global init.defaultBranch main
+    git config --global init.defaultBranch main && \
+    git config --global 'credential.https://github.com.username' 'x-access-token' && \
+    git config --global 'credential.https://github.com.helper' '!f() { if [ "$1" = get ]; then case "${GH_TOKEN-}" in (*[![:space:]]*) echo "password=${GH_TOKEN}";; (*) echo "error: GH_TOKEN is missing" >&2; exit 1;; esac; fi; }; f'
 
 ENTRYPOINT ["jenkins-agent"]
