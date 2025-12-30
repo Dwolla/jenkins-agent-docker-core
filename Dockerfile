@@ -14,7 +14,7 @@ USER root
 
 RUN set -ex && \
     apt-get update && \
-    apt-get install -y \
+    (apt-get install -y \
         asciidoctor \
         apt-transport-https \
         bash \
@@ -31,7 +31,23 @@ RUN set -ex && \
         python3-venv \
         shellcheck \
         zip \
-        && \
+    || (sleep 5 && apt-get update && apt-get install -y \
+        asciidoctor \
+        apt-transport-https \
+        bash \
+        bc \
+        ca-certificates \
+        curl \
+        expect \
+        git \
+        gpg \
+        jq \
+        make \
+        python3 \
+        python3-pip \
+        python3-venv \
+        shellcheck \
+        zip)) && \
     pip3 install --upgrade \
         awscli \
         virtualenv \
