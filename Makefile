@@ -3,10 +3,10 @@ JOB := remoting-${JENKINS_REMOTING_TAG}
 CLEAN_JOB := clean-${JENKINS_REMOTING_TAG}
 
 # Default target builds Java 11, 17, and 21 variants
-all: remoting-bookworm-jdk11 remoting-4.13.3-1-jdk17 remoting-3355.v388858a_47b_33-5-jdk21
+all: remoting-bookworm-jdk11 remoting-bookworm-jdk17 remoting-bookworm-jdk21
 
 clean: ${CLEAN_JOB}
-.PHONY: all clean ${JOB} ${CLEAN_JOB} remoting-bookworm-jdk11 remoting-4.13.3-1-jdk17 remoting-3355.v388858a_47b_33-5-jdk21
+.PHONY: all clean ${JOB} ${CLEAN_JOB} remoting-bookworm-jdk11 remoting-bookworm-jdk17 remoting-bookworm-jdk21
 
 ${JOB}: remoting-%: Dockerfile
 	docker build \
@@ -20,16 +20,16 @@ remoting-bookworm-jdk11: Dockerfile
 	  --tag dwolla/jenkins-agent-core:bookworm-jdk11-SNAPSHOT \
 	  .
 
-remoting-4.13.3-1-jdk17: Dockerfile
+remoting-bookworm-jdk17: Dockerfile
 	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=4.13.3-1-jdk17 \
-	  --tag dwolla/jenkins-agent-core:4.13.3-1-jdk17-SNAPSHOT \
+	  --build-arg JENKINS_REMOTING_TAG=bookworm-jdk17 \
+	  --tag dwolla/jenkins-agent-core:bookworm-jdk17-SNAPSHOT \
 	  .
 
-remoting-3355.v388858a_47b_33-5-jdk21: Dockerfile
+remoting-bookworm-jdk21: Dockerfile
 	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3355.v388858a_47b_33-5-jdk21 \
-	  --tag dwolla/jenkins-agent-core:3355.v388858a_47b_33-5-jdk21-SNAPSHOT \
+	  --build-arg JENKINS_REMOTING_TAG=bookworm-jdk21 \
+	  --tag dwolla/jenkins-agent-core:bookworm-jdk21-SNAPSHOT \
 	  .
 
 ${CLEAN_JOB}: clean-%:

@@ -13,8 +13,8 @@ jobs:
       matrix:
         remoting_tag:
           - bookworm-jdk11
-          - 4.13.3-1-jdk17
-          - 3355.v388858a_47b_33-5-jdk21
+          - bookworm-jdk17
+          - bookworm-jdk21
     runs-on: ubuntu-latest
     steps:
       - name: Build and Push Docker Image
