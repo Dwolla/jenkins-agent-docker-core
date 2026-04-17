@@ -32,13 +32,9 @@ RUN set -ex && \
         shellcheck \
         zip \
         && \
-    (python3 -c "import sys; exit(0 if sys.version_info >= (3, 13) else 1)" && \
-     pip3 install --break-system-packages --upgrade \
-         awscli \
-         virtualenv) || \
-    (pip3 install --upgrade \
-         awscli \
-         virtualenv) && \
+    pip3 install --break-system-packages --upgrade \
+        awscli \
+        virtualenv && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     /tmp/build/install-esh.sh v0.3.2 && \
     chmod +x /usr/local/bin/sdkman-init-wrapper.sh && \

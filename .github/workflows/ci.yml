@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
         remoting_tag:
-          - 4.13.2-1-jdk11
-          - 4.13.3-1-jdk17
-          - 3355.v388858a_47b_33-5-jdk21
+          - 3261.v9c670a_4748a_9-8-jdk11
+          - 3261.v9c670a_4748a_9-8-jdk17
+          - 3261.v9c670a_4748a_9-8-jdk21
     runs-on: ubuntu-latest
     steps:
       - name: Build and Push Docker Image
