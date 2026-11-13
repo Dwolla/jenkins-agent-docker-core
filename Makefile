@@ -1,36 +1,20 @@
-JENKINS_REMOTING_TAG := 3261.v9c670a_4748a_9-8-jdk11
-JOB := remoting-${JENKINS_REMOTING_TAG}
-CLEAN_JOB := clean-${JENKINS_REMOTING_TAG}
+JENKINS_REMOTING_TAG := 3395.v6e5377b_0fb_3c-5-jdk21
+BUILD_JDKS := 11 17 21 25
 
-# Default target builds Java 11, 17, and 21 variants
-all: remoting-3261.v9c670a_4748a_9-8-jdk11 remoting-3261.v9c670a_4748a_9-8-jdk17 remoting-3261.v9c670a_4748a_9-8-jdk21
+# Every variant runs the agent on Java 21 (JENKINS_REMOTING_TAG); BUILD_JDK is the JDK builds see.
+# Tags read <remoting tag>-build-jdk<N>, e.g. 3395.v6e5377b_0fb_3c-5-jdk21-build-jdk11.
+VARIANTS := $(addprefix build-jdk,${BUILD_JDKS})
 
-clean: ${CLEAN_JOB}
-.PHONY: all clean ${JOB} ${CLEAN_JOB} remoting-3261.v9c670a_4748a_9-8-jdk11 remoting-3261.v9c670a_4748a_9-8-jdk17 remoting-3261.v9c670a_4748a_9-8-jdk21
+all: ${VARIANTS}
+clean: $(addprefix clean-,${VARIANTS})
+.PHONY: all clean ${VARIANTS} $(addprefix clean-,${VARIANTS})
 
-${JOB}: remoting-%: Dockerfile
+${VARIANTS}: build-jdk%: Dockerfile
 	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=$* \
-	  --tag dwolla/jenkins-agent-core:$*-SNAPSHOT \
+	  --build-arg JENKINS_REMOTING_TAG=${JENKINS_REMOTING_TAG} \
+	  --build-arg BUILD_JDK=$* \
+	  --tag dwolla/jenkins-agent-core:${JENKINS_REMOTING_TAG}-build-jdk$*-SNAPSHOT \
 	  .
 
-remoting-3261.v9c670a_4748a_9-8-jdk11: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk11 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk11-SNAPSHOT \
-	  .
-
-remoting-3261.v9c670a_4748a_9-8-jdk17: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk17 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk17-SNAPSHOT \
-	  .
-
-remoting-3261.v9c670a_4748a_9-8-jdk21: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk21 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk21-SNAPSHOT \
-	  .
-
-${CLEAN_JOB}: clean-%:
-	docker rmi -f dwolla/jenkins-agent-core:$*-SNAPSHOT
+$(addprefix clean-,${VARIANTS}): clean-build-jdk%:
+	docker rmi -f dwolla/jenkins-agent-core:${JENKINS_REMOTING_TAG}-build-jdk$*-SNAPSHOT
