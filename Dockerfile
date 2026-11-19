@@ -1,9 +1,15 @@
-ARG JENKINS_REMOTING_TAG
+# One core image for every agent. The agent process (Jenkins Remoting) runs on the Java 21 that ships
+# in the inbound-agent image, which Jenkins 2.555+ requires. JENKINS_JAVA_BIN pins the agent to that
+# Java, so an image built on this one can point JAVA_HOME at a different build JDK (as the sbt images
+# do) without changing the JVM the agent runs on. The inbound-agent launch script prefers
+# JENKINS_JAVA_BIN over JAVA_HOME.
+ARG JENKINS_REMOTING_TAG=3395.v6e5377b_0fb_3c-5-jdk21
 
 FROM jenkins/inbound-agent:$JENKINS_REMOTING_TAG
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
-ENV JENKINS_HOME=/home/jenkins
+ENV JENKINS_HOME=/home/jenkins \
+    JENKINS_JAVA_BIN=/opt/java/openjdk/bin/java
 
 COPY build/install-esh.sh /tmp/build/install-esh.sh
 COPY build/sdkman-init-wrapper.sh /usr/local/bin/sdkman-init-wrapper.sh
@@ -32,7 +38,7 @@ RUN set -ex && \
         shellcheck \
         zip \
         && \
-    pip3 install --break-system-packages --upgrade \
+    pip3 install --break-system-packages --upgrade --ignore-installed \
         awscli \
         virtualenv && \
     ln -s /usr/bin/python3 /usr/bin/python && \

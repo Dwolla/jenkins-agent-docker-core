@@ -6,4 +6,11 @@ Docker images containing the Jenkins remoting JAR and necessary dependencies.
 
 GitHub Actions will build the Docker images for multiple supported architectures.
 
-To build locally, run `make all` or `make remoting-${TAG}` for one of the supported tags.
+There is one core image. The Jenkins agent process (Remoting) runs on the inbound-agent's Java 21,
+which Jenkins 2.555 and later require. `JENKINS_JAVA_BIN` pins the agent to that Java, so images
+built on this one (for example the sbt images) can set `JAVA_HOME` to a different build JDK without
+changing the agent's JVM.
+
+Tags read `<remoting tag>-<sha>`, for example `3395.v6e5377b_0fb_3c-5-jdk21-abc1234`.
+
+To build locally, run `make all`.

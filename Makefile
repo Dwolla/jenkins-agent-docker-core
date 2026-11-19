@@ -1,36 +1,16 @@
-JENKINS_REMOTING_TAG := 3261.v9c670a_4748a_9-8-jdk11
-JOB := remoting-${JENKINS_REMOTING_TAG}
-CLEAN_JOB := clean-${JENKINS_REMOTING_TAG}
+JENKINS_REMOTING_TAG := 3395.v6e5377b_0fb_3c-5-jdk21
+IMAGE := dwolla/jenkins-agent-core:${JENKINS_REMOTING_TAG}-SNAPSHOT
 
-# Default target builds Java 11, 17, and 21 variants
-all: remoting-3261.v9c670a_4748a_9-8-jdk11 remoting-3261.v9c670a_4748a_9-8-jdk17 remoting-3261.v9c670a_4748a_9-8-jdk21
+# One core image: the agent runs on the inbound-agent's Java 21. Images that need a different
+# build JDK (the sbt images) add it themselves and point JAVA_HOME at it.
+all: build
+.PHONY: all build clean
 
-clean: ${CLEAN_JOB}
-.PHONY: all clean ${JOB} ${CLEAN_JOB} remoting-3261.v9c670a_4748a_9-8-jdk11 remoting-3261.v9c670a_4748a_9-8-jdk17 remoting-3261.v9c670a_4748a_9-8-jdk21
-
-${JOB}: remoting-%: Dockerfile
+build: Dockerfile
 	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=$* \
-	  --tag dwolla/jenkins-agent-core:$*-SNAPSHOT \
+	  --build-arg JENKINS_REMOTING_TAG=${JENKINS_REMOTING_TAG} \
+	  --tag ${IMAGE} \
 	  .
 
-remoting-3261.v9c670a_4748a_9-8-jdk11: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk11 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk11-SNAPSHOT \
-	  .
-
-remoting-3261.v9c670a_4748a_9-8-jdk17: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk17 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk17-SNAPSHOT \
-	  .
-
-remoting-3261.v9c670a_4748a_9-8-jdk21: Dockerfile
-	docker build \
-	  --build-arg JENKINS_REMOTING_TAG=3261.v9c670a_4748a_9-8-jdk21 \
-	  --tag dwolla/jenkins-agent-core:3261.v9c670a_4748a_9-8-jdk21-SNAPSHOT \
-	  .
-
-${CLEAN_JOB}: clean-%:
-	docker rmi -f dwolla/jenkins-agent-core:$*-SNAPSHOT
+clean:
+	docker rmi -f ${IMAGE}
