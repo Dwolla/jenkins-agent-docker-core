@@ -3,7 +3,7 @@
 # Java, so an image built on this one can point JAVA_HOME at a different build JDK (as the sbt images
 # do) without changing the JVM the agent runs on. The inbound-agent launch script prefers
 # JENKINS_JAVA_BIN over JAVA_HOME.
-ARG JENKINS_REMOTING_TAG=3395.v6e5377b_0fb_3c-5-jdk21
+ARG JENKINS_REMOTING_TAG=3396.ve02b_5cde31b_2-4-jdk21
 
 FROM jenkins/inbound-agent:$JENKINS_REMOTING_TAG
 
