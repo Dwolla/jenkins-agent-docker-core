@@ -11,6 +11,6 @@ which Jenkins 2.555 and later require. `JENKINS_JAVA_BIN` pins the agent to that
 built on this one (for example the sbt images) can set `JAVA_HOME` to a different build JDK without
 changing the agent's JVM.
 
-Tags read `<remoting tag>-<sha>`, for example `3395.v6e5377b_0fb_3c-5-jdk21-abc1234`.
+Tags read `<remoting tag>-<sha>`, for example `3396.ve02b_5cde31b_2-4-jdk21-abc1234`.
 
 To build locally, run `make all`.
