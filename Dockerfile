@@ -6,6 +6,11 @@
 ARG JENKINS_REMOTING_TAG=3396.ve02b_5cde31b_2-4-jdk21
 
 FROM jenkins/inbound-agent:$JENKINS_REMOTING_TAG
+
+# Set by BuildKit. When the base tag has no image for the target platform, BuildKit
+# silently falls back to a compatible one (e.g. arm/v7 for arm64), so fail instead.
+ARG TARGETARCH
+
 LABEL maintainer="Dwolla Dev <dev+jenkins-agent-core@dwolla.com>"
 LABEL org.label-schema.vcs-url="https://github.com/Dwolla/jenkins-agent-docker-core"
 ENV JENKINS_HOME=/home/jenkins \
@@ -17,6 +22,12 @@ COPY build/sdkman-init-wrapper.sh /usr/local/bin/sdkman-init-wrapper.sh
 WORKDIR ${JENKINS_HOME}
 
 USER root
+
+RUN BASE_ARCH="$(dpkg --print-architecture)" ; \
+    if [ -n "$TARGETARCH" ] && [ "$BASE_ARCH" != "$TARGETARCH" ] ; then \
+        echo "base image architecture $BASE_ARCH does not match target $TARGETARCH" ; \
+        exit 97 ; \
+    fi
 
 RUN set -ex && \
     apt-get update && \
